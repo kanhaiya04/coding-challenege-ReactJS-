@@ -4,7 +4,6 @@ import Row from "./Row";
 import "./Table.css";
 import Modal from "react-bootstrap/Modal";
 import leadsContext from "../../content/leads/leadsContent";
-import AddLead from "./AddLead";
 import Button from "react-bootstrap/Button";
 
 function Tables() {
@@ -56,9 +55,9 @@ function Tables() {
   
 
   return (
-    <>
-      <Button onClick={handleShow}>Add</Button>
-      <AddLead />
+    <tableSection>
+      <Button className="add_but" onClick={handleShow}>Add</Button>
+      
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -183,11 +182,11 @@ function Tables() {
         </Modal.Footer>
       </Modal>
 
-      <Table responsive>
+      <Table responsive className="select">
         <table className="table">
           <thead>
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">ID</th>
               <th scope="col">Name</th>
               <th scope="col">Email</th>
               <th scope="col">Source</th>
@@ -206,7 +205,7 @@ function Tables() {
           </tbody>
         </table>
       </Table>
-    </>
+    </tableSection>
   );
 }
 

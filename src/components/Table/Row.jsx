@@ -3,6 +3,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import leadsContext from "../../content/leads/leadsContent";
+import "./Table.css";
 const Row = (props) => {
   const { deleteLead, updateLead } = useContext(leadsContext);
   const [show, setShow] = useState(false);
@@ -166,7 +167,7 @@ const Row = (props) => {
       </Modal>
 
       <tr>
-        <th scope="row">1</th>
+        <th scope="row">{props.data.id}</th>
         <td>{props.data.Name}</td>
         <td>{props.data.email}</td>
         <td>{props.data.Source}</td>

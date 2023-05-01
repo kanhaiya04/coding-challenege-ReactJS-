@@ -43,7 +43,7 @@ const LeadsState = (props) => {
     updatedAt
   ) => {
     const data = {
-      id: 1,
+      id: leadsData.length,
       Name: Name,
       email: email,
       Source: Source,
