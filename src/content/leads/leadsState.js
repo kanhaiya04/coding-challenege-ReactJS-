@@ -1,58 +1,80 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import leadsContext from "./leadsContent";
+import { useQuery } from "@apollo/client";
+import { getLeads } from "../../Graphql/Query";
 
 const LeadsState = (props) => {
+  const [leadsData, setLeads] = useState([]);
+  const { loading, data } = useQuery(getLeads);
 
-  
-  const d=[{
-    "id":"4",
-    "Name": "This is editing the note",
-    "email": "kan@gmail.com",
-    "Source": "website",
-    "Status": "Follow_up",
-    "date": "2023-04-29",
-    "Time": "09:52:19.000",
-    "createdAt": "2023-04-28T20:02:44.326Z",
-    "updatedAt": "2023-04-29T09:52:20.049Z"
-  },
-  {
-    "id": "2",
-    "Name": "my first",
-    "email": "kan@gmail.com",
-    "Source": "website",
-    "Status": "Follow_up",
-    "date": "2023-04-29",
-    "Time": "09:52:19.000",
-    "createdAt": "2023-04-28T20:02:44.326Z",
-    "updatedAt": "2023-04-29T09:52:20.049Z"
-  }];
-  const [leads,setLeads]=useState(d);
+  useEffect(() => {
+    if (data) {
+      const res = data.leads.data;
 
-  const addLead = (Name,email,Source,Status,date,Time,createdAt,updatedAt)=>{
-    const data={
-      id:1,
-      Name:Name,
-      email:email,
-      Source:Source,
-      Status:Status,
-      date:date,
-      Time:Time,
-      createdAt:createdAt,
-      updatedAt:updatedAt
+      const final = [];
+      for (let i = 0; i < res.length; i++) {
+        const values = {
+          id: res[i].id,
+          Name: res[i].attributes.Name,
+          email: res[i].attributes.email,
+          Source: res[i].attributes.Source,
+          Status: res[i].attributes.Status,
+          date: res[i].attributes.date,
+          Time: res[i].attributes.Time,
+          createdAt: res[i].attributes.createdAt,
+          updatedAt: res[i].attributes.updatedAt,
+        };
+        final.push(values);
+      }
+      setLeads(final);
     }
-    setLeads(leads.concat(data));
-    
+  }, [data]);
+
+  if (loading) return <></>;
+
+  const addLead = (
+    Name,
+    email,
+    Source,
+    Status,
+    date,
+    Time,
+    createdAt,
+    updatedAt
+  ) => {
+    const data = {
+      id: 1,
+      Name: Name,
+      email: email,
+      Source: Source,
+      Status: Status,
+      date: date,
+      Time: Time,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    };
+    setLeads(leadsData.concat(data));
   };
 
-  const deleteLead = (id)=>{
-    const newLead = leads.filter((lead) => {
+  const deleteLead = (id) => {
+    const newLead = leadsData.filter((lead) => {
       return lead.id !== id;
     });
     setLeads(newLead);
-  }
+  };
 
-  const updateLead = (id,Name,email,Source,Status,date,Time,createdAt,updatedAt)=>{
-    let newLeads = JSON.parse(JSON.stringify(leads));
+  const updateLead = (
+    id,
+    Name,
+    email,
+    Source,
+    Status,
+    date,
+    Time,
+    createdAt,
+    updatedAt
+  ) => {
+    let newLeads = JSON.parse(JSON.stringify(leadsData));
     for (let index = 0; index < newLeads.length; index++) {
       const element = newLeads[index];
       if (element.id === id) {
@@ -67,14 +89,15 @@ const LeadsState = (props) => {
         break;
       }
     }
-      setLeads(newLeads);
-  }
-  
+    setLeads(newLeads);
+  };
 
   return (
-    <leadsContext.Provider value={{leads,addLead,deleteLead,updateLead}}>
+    <leadsContext.Provider
+      value={{ leadsData, addLead, deleteLead, updateLead }}
+    >
       {props.children}
-      </leadsContext.Provider>
+    </leadsContext.Provider>
   );
 };
 
